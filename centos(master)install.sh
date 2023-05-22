@@ -5,7 +5,7 @@ cat /etc/sysconfig/selinux | grep SELINUX=
 sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 cat /etc/sysconfig/selinux | grep SELINUX=
 setenforce 0
-######################
+
 
 ### Make DNS local entries ### Change it as per your requirement #####
 cat <<-EOF >>  /etc/hosts
@@ -14,13 +14,11 @@ cat <<-EOF >>  /etc/hosts
 192.168.20.136  work
 
 EOF
-######################
 
 ### Disable the Firewall ########
 systemctl stop firewalld.service
 systemctl disable firewalld
 systemctl status firewalld
-######################
 
 ### Kubernetes prerequisite #######
 RAM=`cat /proc/meminfo | grep MemTotal | awk '{print ($2 / 1024) / 1024 ,"GiB"}'`
@@ -30,8 +28,6 @@ sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 swapoff -a
 echo "Your system RAM is $RAM"
 echo "Your system CPU are $CPU"
-######################
-
 
 ### Preparation for Docker installation #########
 modprobe br_netfilter
@@ -39,8 +35,6 @@ lsmod | grep br_netfilter
 
 echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
 sysctl -a | grep net.bridge.bridge-nf-call-iptables
-######################
-
 
 
 ### Docker installation steps #######
@@ -53,10 +47,6 @@ sed -i 's/SystemdCgroup = false/SystemdCgroup = true/g' /etc/containerd/config.t
 systemctl start docker
 systemctl enable docker
 docker run hello-world
-######################
-
-
-
 
 ### Kubernetes installation steps #####
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
